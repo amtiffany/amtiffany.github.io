@@ -1,3 +1,5 @@
 title: Alice's coding experiments
-description: my notes as I become a better programmer
 theme: minima
+
+plugins:
+	# none for now

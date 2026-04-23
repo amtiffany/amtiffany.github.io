@@ -4,6 +4,7 @@ title: "Experiments with regular distributions of irregular triangles"
 ---
 
 **Triangles**
+
 Before doing anything with distributions, I had to have something to actually distribute. Thinking that I could learn twice as much if I combined two different concepts I was interested in, I chose to start with arbitrary n-gons due to their reputation as the basis for 3d graphics. After doing some research into polygon generating algorithms, I settled on the graham scan algorithm because of its low time complexity and because I wanted to avoid recursive algorithms while learning cuda. 
 
 I soon learned the benefits of keeping it simple. The polygons, though interesting in their own right, were not the objects I was looking for in this project. For one thing, though I could control the number of points, the radius, and the center of the point cloud the polygon was constructed from, I could not control the number of vertices of the final polygon, nor its size or shape. This made it a bad choice for visualizing noise, as there were too many features of the polygon that were completely random. To make matters worse, new to cuda as I was, I encountered a bug when generating many polygons at once that was not present in my initial c++ tests, and because of the irregular nature of the polygons, debugging was slow and tedious. Instead of getting sidetracked, I resigned myself to using a simpler shape that was more suited to my goal.
@@ -22,6 +23,7 @@ While seemingly simple, this approach achieves a lot. The color control allows f
 
 
 **Distribution**
+
 Now that I had my triangles, I could move on to their distribution. I decided on using blue noise, distributing the circumcenter of each triangle such that it is roughly equidistant from each other triangle’s. I tried several approaches to blue noise generation: Mitchell's best candidate algorithm, Poisson’s disk algorithm, and a simple particle simulation.
     
 Though Mitchell's algorithm is the simplest conceptually, I decided to start by implementing Poisson’s disk algorithm. Poisson’s algorithm is easily the most efficient algorithm, doing away with costly k-d trees and computation-heavy simulations, and is used for most applications, especially real-time computations used in videogames or interactive shaders. It is not without its drawbacks, however. For one thing, I found Poisson’s algorithm to be finicky and heavily dependent on the parameters, meaning that I had to spend a long time simply experimenting until I found the right parameters.    Since I am only generating the noise distribution once and I am not doing real-time graphics, I found the benefit to using Poisson’s algorithm negligible.
