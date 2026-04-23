@@ -11,16 +11,29 @@ I soon learned the benefits of keeping it simple. The polygons, though interesti
 
 My next idea was to use isosceles triangles. This avoided many of the issues I had with arbitrary n-gons: the triangles were extremely straightforward to generate and were regular while still having potential for variance in their rotations and their side-lengths. However, I again realized that these were not the shapes for the job- the shapes were actually too orderly!
 
-I decided I wanted something in the middle- something that wasn’t so random that I couldn’t make anything out in the chaos, but wasn’t so orderly that the shapes melded together. What did I settle on? Circles of fixed radius inscribed with triangles. This was a nice middle ground between the 2 earlier approaches, where I could guarantee that the triangles would have some measure of regularity in their size and distribution while still letting them have variance in their shape.
+I decided I wanted something in the middle: something that wasn’t so random that I couldn’t make anything out in the chaos, but wasn’t so orderly that the shapes melded together. What did I settle on? Circles of fixed radius inscribed with triangles. This was a nice middle ground between the 2 earlier approaches, where I could guarantee that the triangles would have some measure of regularity in their size and distribution while still letting them have variance in their shape.
+
+![Inscribed Triangles With simple Compositing](../assets/images/triangle-distributions/triangles6.png)
+_triangles inscribed in a circle of fixed radius with simple compositing_
 
 Now onto drawing the triangles. Since the triangle generation was so light on computation and was only done once at the start of the program, I opted only to parallelize only the rasterization of the triangles, where I needed to check every single pixel for collision with all of the triangles. Rasterization itself was simple: each thread is one pixel. For each triangle, the thread colors itself in if it is within the bounds of the triangle. Simple right? Well, yes and no. on the technical side of things, this was one of the simplest parts of the whole thing. On the artistic side, however, it was one of the most complicated matters. 
+
+![Inscribed Triangles With simple Compositing](../assets/images/triangle-distributions/triangles0.png)
+_randomly distributed triangles with completely random hue. notice how the color becomes muddy where more triangles overlap_
 
 I wanted a lot from my triangles. I wanted them to look orderly, but not so much that they looked boring. I wanted to show how they overlap clearly, but while letting each triangle stand out from the rest. I wanted my triangles to be colorful and yet still mesh well together, all while making sure the color didn’t get muddy or indistinct. I needed some way of compositing the triangles in line with all these constraints, all while making sure not to get too distracted from my goal.
 
 After some deliberation, I eventually decided on what I have now. Triangles are generated with an rgb value that is a pure hue between red and blue. When triangles overlap, the pixel’s hue becomes the average of the hues of the triangles on the pixel, and its darkness increases exponentially with regards to the number of triangles.
+
+![Inscribed Triangles With simple Compositing](../assets/images/triangle-distributions/triangles7.png)
+_triangles inscribed in a circle of fixed radius with the aforementioned compositing method. the result is both more visually interesting and more readable_
 	
 While seemingly simple, this approach achieves a lot. The color control allows for random hue generation without making the image seem too messy or confused. The averaging allows the image to reach an equilibrium in color as more triangles are added, making for a nice visual indicator and showing how the approach brings about order even in randomness. The darkness conveys something similar, but in a different way and on a different scale, adding complexity to the image.
 
+![Inscribed Triangles With simple Compositing](../assets/images/triangle-distributions/triangles9.png)
+
+![Inscribed Triangles With simple Compositing](../assets/images/triangle-distributions/triangles16.png)
+_the overall hue and darkness of the image become more uniform as more triangles are added_
 
 **Distribution**
 
@@ -30,5 +43,5 @@ Though Mitchell's algorithm is the simplest conceptually, I decided to start by 
     
 On to Mitchell’s algorithm. Interestingly, this algorithm was both the simplest to understand, the simplest to implement, and produced the highest quality noise. Of course, this is partially due to my decision to use a library for the nearest-neighbor, going against my strong inclinations to implement everything from scratch. As mentioned before, the slowness of this algorithm was forgivable because I was only generating the noise once.
 
-Finally, I wanted to see if I could generate blue noise through plain-old simulation, too. Using cuda, I set up a simple physics simulation where particles in a toroidal space are repelled from one-another. This is the first time I have tried this sort of simulation, so there was lots to get right (or wrong). Like Poisson, this method was heavily dependent on parameters, and the behavior of the particles was subject to wild variation with different particles, making debugging difficult. Eventually, however, I got the system to stabilize and produce a satisfactory result. Interestingly, though, the result was actually slightly more orderly looking than I expected! Unlike mitchell blue noise with its character, somewhat circular, irregular looking distribution, the simulation stabilized to something remarkably grid-like. Regardless, I got the results I was looking for- a system where particles stabilized to be equidistant from one-another.
+Finally, I wanted to see if I could generate blue noise through plain-old simulation, too. Using cuda, I set up a simple physics simulation where particles in a toroidal space are repelled from one-another. This is the first time I have tried this sort of simulation, so there was lots to get right (or wrong). Like Poisson, this method was heavily dependent on parameters, and the behavior of the particles was subject to wild variation with different particles, making debugging difficult. Eventually, however, I got the system to stabilize and produce a satisfactory result. Interestingly, though, the result was actually slightly more orderly looking than I expected! Unlike mitchell blue noise with its character, somewhat circular, irregular looking distribution, the simulation stabilized to something remarkably grid-like. Regardless, I got the results I was looking for: a system where particles stabilized to be equidistant from one-another.
 
