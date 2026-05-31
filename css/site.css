@@ -284,12 +284,6 @@ main {
   text-decoration: none;
 }
 
-.discussion-status {
-  color: var(--muted);
-  font-size: 0.95rem;
-  margin: 0 0 1rem;
-}
-
 .discussion-list {
   list-style: none;
   padding: 0;

@@ -1,26 +1,6 @@
 (function () {
   const REPO = "amtiffany/amtiffany.github.io";
 
-  const query = `
-    query($owner: String!, $name: String!, $number: Int!) {
-      repository(owner: $owner, name: $name) {
-        discussion(number: $number) {
-          title
-          url
-          comments(first: 100) {
-            totalCount
-            nodes {
-              author { login avatarUrl url }
-              body
-              createdAt
-              url
-            }
-          }
-        }
-      }
-    }
-  `;
-
   function escapeHtml(text) {
     const div = document.createElement("div");
     div.textContent = text;
@@ -55,7 +35,7 @@
       '<header class="comment-header">' +
       '<img class="comment-avatar" src="' +
       escapeHtml(comment.author.avatarUrl) +
-      '" alt="" width="32" height="32">' +
+      '" alt="" width="32" height="32" loading="lazy">' +
       '<div class="comment-meta">' +
       '<a class="comment-author" href="' +
       escapeHtml(comment.author.url) +
@@ -75,58 +55,79 @@
     return li;
   }
 
-  async function loadDiscussion(root) {
-    const number = parseInt(root.dataset.discussion, 10);
-    const list = root.querySelector(".discussion-list");
-    const status = root.querySelector(".discussion-status");
-    const replyLink = root.querySelector(".discussion-reply");
+  function normalizeComment(raw) {
+    return {
+      author: {
+        login: raw.user.login,
+        avatarUrl: raw.user.avatar_url,
+        url: raw.user.html_url,
+      },
+      body: raw.body,
+      createdAt: raw.created_at,
+    };
+  }
 
-    const [owner, name] = REPO.split("/");
+  async function fetchComments(owner, name, number) {
+    const comments = [];
+    let page = 1;
 
-    try {
-      const response = await fetch("https://api.github.com/graphql", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          query: query,
-          variables: { owner: owner, name: name, number: number },
-        }),
+    while (page <= 10) {
+      const url =
+        "https://api.github.com/repos/" +
+        owner +
+        "/" +
+        name +
+        "/discussions/" +
+        number +
+        "/comments?per_page=100&page=" +
+        page;
+
+      const response = await fetch(url, {
+        headers: {
+          Accept: "application/vnd.github+json",
+          "X-GitHub-Api-Version": "2022-11-28",
+        },
       });
 
       if (!response.ok) {
         throw new Error("HTTP " + response.status);
       }
 
-      const payload = await response.json();
-      if (payload.errors) {
-        throw new Error(payload.errors[0].message);
+      const batch = await response.json();
+      if (!Array.isArray(batch) || batch.length === 0) {
+        break;
       }
 
-      const discussion = payload.data.repository.discussion;
-      const comments = discussion.comments.nodes;
+      comments.push.apply(comments, batch);
 
-      if (replyLink) {
-        replyLink.href = discussion.url;
+      if (batch.length < 100) {
+        break;
       }
+      page += 1;
+    }
 
-      if (comments.length === 0) {
-        status.textContent = "No messages yet. Be the first to write one.";
-        status.hidden = false;
-        return;
-      }
+    return comments;
+  }
 
-      status.hidden = true;
-      comments.forEach(function (comment) {
-        list.appendChild(renderComment(comment));
+  async function loadDiscussion(root) {
+    const number = parseInt(root.dataset.discussion, 10);
+    const list = root.querySelector(".discussion-list");
+    const replyLink = root.querySelector(".discussion-reply");
+    const [owner, name] = REPO.split("/");
+    const discussionUrl =
+      "https://github.com/" + REPO + "/discussions/" + number;
+
+    if (replyLink) {
+      replyLink.href = discussionUrl;
+    }
+
+    try {
+      const rawComments = await fetchComments(owner, name, number);
+
+      rawComments.forEach(function (raw) {
+        list.appendChild(renderComment(normalizeComment(raw)));
       });
     } catch (err) {
-      status.textContent =
-        "Could not load messages. View or post on GitHub instead.";
-      status.hidden = false;
-      if (replyLink) {
-        replyLink.href =
-          "https://github.com/" + REPO + "/discussions/" + number;
-      }
       console.error("Discussion load failed:", err);
     }
   }
