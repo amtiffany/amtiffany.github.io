@@ -5,11 +5,16 @@
 }
 
 :root {
-  --text: #1a1a1a;
-  --muted: #555;
-  --border: #e8e8e8;
-  --accent: #2a7ae2;
-  --bg: #fdfdfd;
+  --bg: #0d0d12;
+  --bg-elevated: #14141c;
+  --text: #e8e8f0;
+  --muted: #9a9ab0;
+  --border: #2a2a3a;
+  --accent-blue: #5b9cf5;
+  --accent-purple: #a78bfa;
+  --accent: var(--accent-blue);
+  --accent-hover: #7eb3ff;
+  --highlight: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
   --max-width: 52rem;
   --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-serif: Georgia, "Times New Roman", serif;
@@ -17,6 +22,7 @@
 
 html {
   font-size: 18px;
+  color-scheme: dark;
 }
 
 body {
@@ -28,17 +34,25 @@ body {
 }
 
 a {
-  color: var(--accent);
+  color: var(--accent-blue);
   text-decoration: none;
+  transition: color 0.15s ease;
 }
 
 a:hover {
+  color: var(--accent-purple);
   text-decoration: underline;
+}
+
+::selection {
+  background: rgba(91, 156, 245, 0.35);
+  color: var(--text);
 }
 
 .site-header,
 .site-footer {
   border-bottom: 1px solid var(--border);
+  background: var(--bg-elevated);
 }
 
 .site-footer {
@@ -66,13 +80,16 @@ a:hover {
 .site-title {
   font-weight: 700;
   font-size: 1.1rem;
-  color: var(--text);
+  background: var(--highlight);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
   text-decoration: none;
 }
 
 .site-title:hover {
   text-decoration: none;
-  color: var(--accent);
+  opacity: 0.9;
 }
 
 .site-nav a {
@@ -80,20 +97,42 @@ a:hover {
   font-size: 0.95rem;
 }
 
+.site-nav a:hover {
+  color: var(--accent-purple);
+  text-decoration: none;
+}
+
 main {
   padding: 2rem 0 3rem;
 }
 
-.home-intro h1 {
+.home-intro h1,
+.post-header h1 {
   font-family: var(--font-serif);
-  font-size: 2rem;
   line-height: 1.25;
+  background: var(--highlight);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.home-intro h1 {
+  font-size: 2rem;
   margin: 0 0 0.75rem;
 }
 
 .home-intro p {
   margin: 0 0 2rem;
   color: var(--muted);
+}
+
+#posts-heading {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--accent-purple);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
 }
 
 .post-list {
@@ -105,6 +144,15 @@ main {
 .post-list li {
   padding: 1rem 0;
   border-top: 1px solid var(--border);
+}
+
+.post-list li:hover {
+  background: rgba(91, 156, 245, 0.04);
+  margin-left: -0.5rem;
+  margin-right: -0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  border-radius: 6px;
 }
 
 .post-list .post-date {
@@ -120,20 +168,29 @@ main {
   font-weight: 600;
 }
 
+.post-list h2 a {
+  color: var(--text);
+}
+
+.post-list h2 a:hover {
+  color: var(--accent-blue);
+  text-decoration: none;
+}
+
 .post-header {
   margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
 }
 
 .post-header h1 {
-  font-family: var(--font-serif);
   font-size: 2rem;
-  line-height: 1.25;
   margin: 0 0 0.5rem;
 }
 
 .post-meta {
   margin: 0;
-  color: var(--muted);
+  color: var(--accent-purple);
   font-size: 0.9rem;
 }
 
@@ -145,10 +202,15 @@ main {
   font-family: var(--font-sans);
   font-size: 1.35rem;
   margin: 2.5rem 0 1rem;
+  color: var(--accent-blue);
 }
 
 .post-content p {
   margin: 0 0 1.25rem;
+}
+
+.post-content strong {
+  color: #f0f0ff;
 }
 
 .post-content figure {
@@ -160,6 +222,8 @@ main {
   height: auto;
   display: block;
   border: 1px solid var(--border);
+  border-radius: 6px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
 }
 
 .post-content figcaption {
@@ -168,4 +232,15 @@ main {
   color: var(--muted);
   font-style: italic;
   font-family: var(--font-sans);
+}
+
+.post-content figcaption::before {
+  content: "";
+  display: inline-block;
+  width: 3px;
+  height: 1em;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+  background: var(--highlight);
+  border-radius: 2px;
 }
