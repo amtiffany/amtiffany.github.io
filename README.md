@@ -1,4 +1,4 @@
-# Alice's coding experiments
+# Al's coding experiments
 
 Personal blog at [https://amtiffany.github.io/](https://amtiffany.github.io/).
 
