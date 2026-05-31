@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>experiments with rudimentary rasterization | Alice's coding experiments</title>
+  <title>Experiments with Rudimentary Rasterization | Alice's coding experiments</title>
   <meta name="description" content="Experiments with rudimentary rasterization.">
   <link rel="stylesheet" href="/css/site.css?v=abceff2">
 </head>
@@ -26,12 +26,73 @@
         </header>
 
         <div class="post-content">
+            <p>
+              Welcome back to a new experiment with shaders! Today I will be discussing my foray into the world of projecting and rasterizing 3D shapes.
+            </p>
+            <h2>Projections</h2>
+            <p>
+              I am a math student, so I expected this to be extremely straightforward. Unfortunately, it has been almost 2 years since I finished multivariable calculus, so my little coding experiment started with a much needed review of some basic math.
+            </p>
+            <p>
+              In 3D rendering, 1-point perspective projections are used to convey depth. The renderer needs three things: the “eye” used for perspective, the plane being projected onto, and the point being projected onto the plane. To project, a 3D line is drawn from the eye to the point, and the intersection of the line with the plane is the projection (the plane is usually assumed to be the screen). 
+            </p>
+            <p>
+              In 3D rendering, 1-point perspective projections are used to convey depth. The renderer needs three things: the “eye” used for perspective, the plane being projected onto, and the point being projected onto the plane. To project, a 3D line is drawn from the eye to the point, and the intersection of the line with the plane is the projection (the plane is usually assumed to be the screen). 
+            </p>
+            <p>
+              Since I am not doing realtime-rendering (yet), I originally chose to arbitrarily set the eye to the coordinates (0,0,0) and the plane to (x, y, 1) for all x, y in Reals. Clearly, this simplifies the calculations: for a point p = (x, y, z), the projection is simply p’ = (x/z, y/z, 1). However, this comes at the cost of flexibility. For one, from an exploratory sense, it makes things far less interesting, since it doesn’t allow for experimenting with different perspectives and distortion. For another, it means that the camera cannot move around in space; it is the objects that must move. This makes projections more computationally involved if the coordinates of the projections are pre-baked.
+            </p>
+            <p>
+              For these reasons, I decided to allow the eye to move freely in space. However, the plane is still assumed to be of the form z = c for a constant c in Reals.
+            </p>
+            <p>
+              The calculations are still very simple- we only need to parameterize the line between the eye = (x0, y0, z0) and the point = (x1, y1, z1) and find where it intersects with z = c. First we solve for the time t when z = c:
+            </p>
+            <pre>
+                    t  = (c - z1)/(z0 - z1)
+            </pre>
+            <p>
+              Next, we solve for the x and y coordinates at time = t:
+            </p>
+            <pre>
+                    x2 = x1 + t*(x0 - x1)
+                    y2 = y1 + t*(y0 - y1)
+            </pre>
+            <p>
+              And voila! We have our projection at p2 = (x2, y2, c).
+            </p>
+
+            <h2>Rasterization</h2>
+            <p>
+              Now, onto actually drawing objects. To do this, we must choose how to draw lines.
+            </p>
+            <p>
+              Originally, I chose to project the vertices of my object and draw the lines between them in 2D after the fact. This seemed fine at the time, as I was baking the coordinates of the objects into the code and I wasn’t moving them around, but this is a pretty naive approach. It also meant that I only had to project 2 points per edge, which seemed computationally efficient.  
+            </p>
+            <p>
+              I had several issues with this approach. One issue is that it again makes things far less flexible. A lot of information is lost during projection, and this makes it so that no lines are able to use information about depth, causing lines to incorrectly draw over each other and disallowing the programmer from visually encoding depth in, for example, the color of the line. Additionally, the projected line is less accurate, again due to loss of info during projection. This resulted in jagged lines.
+            </p>
+            <p>
+               Another issue is that it is simply more complicated. It is hard for the programmer to shift between thinking about 3D and 2D, and the decision to render in this way was largely arbitrary, intended to save me time in the short term with little thought to conceptual elegance or long term maintenance.
+            </p>
+            <p>
+              After realizing this, I re-wrote my renderer, this time keeping this far more conceptually simple, though perhaps more computationally intensive. However, I would like to note that, since both methods color each pixel that intersects with the line and projection is O(1), it is only slower than the original method by a linear factor. 
+            </p>
+            <p>
+              The improved rendering method is as follows. Using a method called DDA rasterization to improve line clarity, a number of steps and fixed x, y, and z intervals are chosen. At each step, the current point of the line is incremented by the intervals and is projected. In other terms, if we start at p0 with an interval p1, we project the point p0 + current_steps*p1. This results in clean, accurate lines, and allows for information about depth to be encoded into the lines.
+            </p>
+
+            <h2>Next Steps</h2>
+            <p>
+              Unfortunately, this project aligned with my exam season and so progress has been halted for the past couple of weeks. However, I plan to do some experiments with simulating particles on the surface of 3D objects, connecting back to my previous experiments with blue noise. Stay tuned for that!
+            </p>
+
         </div>
       </article>
 
       <section class="comments-section" data-discussion="3" aria-labelledby="comments-heading">
         <h2 id="comments-heading">Comments</h2>
-        <p class="comments-hint">Sign in with GitHub to comment on this post.</p>
+        <p class="comments-hint">Leave a comment on this post using GitHub:</p>
         <a class="discussion-reply" href="https://github.com/amtiffany/amtiffany.github.io/discussions/3" target="_blank" rel="noopener noreferrer">Leave a comment</a>
         <p class="discussion-status">Loading comments…</p>
         <ul class="discussion-list" aria-live="polite"></ul>
