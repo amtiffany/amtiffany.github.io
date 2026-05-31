@@ -21,6 +21,8 @@ python3 -m http.server 4000
 
 Then visit `http://127.0.0.1:4000`.
 
+**Changing colors:** edit `css/site.css`, then bump the `?v=` query string on the stylesheet link in each HTML page (e.g. `site.css?v=2`) so browsers load the new file.
+
 ## Comments and guestbook
 
 Messages use [GitHub Discussions](https://github.com/amtiffany/amtiffany.github.io/discussions) on this repo (no third-party app required).

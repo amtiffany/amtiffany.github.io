@@ -10,10 +10,10 @@
   --text: #e8e8f0;
   --muted: #9a9ab0;
   --border: #2a2a3a;
-  --accent-blue: ##abceff;
+  --accent-blue: #abceff;
   --accent-purple: #a78bfa;
   --accent: var(--accent-blue);
-  --accent-hover: #7eb3ff;
+  --accent-hover: #c5dcff;
   --highlight: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
   --max-width: 52rem;
   --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
