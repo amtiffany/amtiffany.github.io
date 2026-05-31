@@ -81,6 +81,11 @@
             <p>
               The improved rendering method is as follows. Using a method called DDA rasterization to improve line clarity, a number of steps and fixed x, y, and z intervals are chosen. At each step, the current point of the line is incremented by the intervals and is projected. In other terms, if we start at p0 with an interval p1, we project the point p0 + current_steps*p1. This results in clean, accurate lines, and allows for information about depth to be encoded into the lines.
             </p>
+            
+            <figure>
+            <img src="/assets/images/rudimentary-rasterization/poly2.png" alt="Render of a dodecahedron such that the edges close to the camera are purple and the edges far away are blue">
+            <figcaption>The final product: a dodecahedron with colored edges</figcaption>
+          </figure>
 
             <h2>Next Steps</h2>
             <p>
