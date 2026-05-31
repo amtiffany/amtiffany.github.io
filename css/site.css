@@ -244,3 +244,29 @@ main {
   background: var(--highlight);
   border-radius: 2px;
 }
+
+.comments-section {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+
+.comments-section h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--accent-purple);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  margin: 0 0 0.5rem;
+}
+
+.comments-section .comments-hint {
+  margin: 0 0 1.25rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.giscus {
+  margin-top: 0.5rem;
+}

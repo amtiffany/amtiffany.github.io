@@ -20,3 +20,16 @@ python3 -m http.server 4000
 ```
 
 Then visit `http://127.0.0.1:4000`.
+
+## Comments and guestbook
+
+Comments use [Giscus](https://giscus.app), backed by GitHub Discussions on this repo.
+
+**One-time setup** (if the comment box does not appear):
+
+1. Install the Giscus app: [github.com/apps/giscus](https://github.com/apps/giscus)
+2. Grant access to `amtiffany/amtiffany.github.io`
+3. Use repository `amtiffany/amtiffany.github.io`, category **General**, mapping **pathname** when prompted (the HTML embeds already override mapping per page)
+
+- Home page → guestbook (`data-term="guestbook"`)
+- Blog posts → comments tied to each page URL
