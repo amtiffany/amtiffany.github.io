@@ -21,7 +21,7 @@
     <div class="wrapper">
       <article class="post">
         <header class="post-header">
-          <h1>experiments with rudimentary rasterization</h1>
+          <h1>Experiments With Rudimentary Rasterization</h1>
           <p class="post-meta"><time datetime="2026-05-31">May 31, 2026</time></p>
         </header>
 
@@ -49,14 +49,14 @@
               The calculations are still very simple- we only need to parameterize the line between the eye = (x0, y0, z0) and the point = (x1, y1, z1) and find where it intersects with z = c. First we solve for the time t when z = c:
             </p>
             <pre>
-                    t  = (c - z1)/(z0 - z1)
+                t  = (c - z1)/(z0 - z1)
             </pre>
             <p>
               Next, we solve for the x and y coordinates at time = t:
             </p>
             <pre>
-                    x2 = x1 + t*(x0 - x1)
-                    y2 = y1 + t*(y0 - y1)
+                x2 = x1 + t*(x0 - x1)
+                y2 = y1 + t*(y0 - y1)
             </pre>
             <p>
               And voila! We have our projection at p2 = (x2, y2, c).
