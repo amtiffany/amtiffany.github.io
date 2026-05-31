@@ -23,13 +23,9 @@ Then visit `http://127.0.0.1:4000`.
 
 ## Comments and guestbook
 
-Comments use [Giscus](https://giscus.app), backed by GitHub Discussions on this repo.
+Messages use [GitHub Discussions](https://github.com/amtiffany/amtiffany.github.io/discussions) on this repo (no third-party app required).
 
-**One-time setup** (if the comment box does not appear):
+- Home page → [Guestbook discussion #1](https://github.com/amtiffany/amtiffany.github.io/discussions/1)
+- Triangle post → [Comments discussion #2](https://github.com/amtiffany/amtiffany.github.io/discussions/2)
 
-1. Install the Giscus app: [github.com/apps/giscus](https://github.com/apps/giscus)
-2. Grant access to `amtiffany/amtiffany.github.io`
-3. Use repository `amtiffany/amtiffany.github.io`, category **General**, mapping **pathname** when prompted (the HTML embeds already override mapping per page)
-
-- Home page → guestbook (`data-term="guestbook"`)
-- Blog posts → comments tied to each page URL
+Visitors click **Write in the guestbook** or **Leave a comment** to sign in on GitHub and reply. The site loads existing replies via `js/discussions.js`.
