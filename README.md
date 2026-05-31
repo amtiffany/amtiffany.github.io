@@ -1,9 +1,22 @@
-# GitHub Pages Blog
+# Alice's coding experiments
 
-This is my personal blog where I learn to code.
+Personal blog at [https://amtiffany.github.io/](https://amtiffany.github.io/).
 
-## Included
+This site is **static HTML** (no Jekyll build). Pages:
 
-- Site config: `_config.yml`
-- Home page: `index.md`
-- First post: `2026-04-23-triangle-distributions.md`
+- `index.html` — home and post list
+- `2026/04/23/triangle-distributions.html` — triangle distributions post
+- `css/site.css` — shared styles
+- `assets/images/` — post images
+
+The `.nojekyll` file tells GitHub Pages to serve files as-is.
+
+## Edit locally
+
+Open `index.html` in a browser, or use any static file server:
+
+```bash
+python3 -m http.server 4000
+```
+
+Then visit `http://127.0.0.1:4000`.
